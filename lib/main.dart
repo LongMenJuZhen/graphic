@@ -21,7 +21,7 @@ class _MyAppState extends State<MyApp> {
               seedColor: const Color.fromARGB(255, 84, 115, 38)),
           useMaterial3: true,
         ),
-        title: '这个标题居然可以和应用名不一样',
+        title: '安卓打不出来QAQ',
         home: const Scaffold(
           body: Stack(
             children: [CirclePainter(), Controler()],
