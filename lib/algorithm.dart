@@ -65,48 +65,53 @@ void bresenhamCircle(Canvas canvas, Paint paint, Offset center, Offset point) {
 void bresenhamEllipse(
     Canvas canvas, Paint paint, Offset ponit1, Offset ponit2) {
   //计算圆心和横竖轴
-  final Offset center =
-      Offset((ponit1.dx + ponit2.dx) / 2, (ponit1.dy + ponit2.dy) / 2); // 圆心
-  double rx = (ponit1.dx - ponit2.dx).abs() / 2; // 横半轴
-  double ry = (ponit1.dy - ponit2.dy).abs() / 2; // 竖半轴
+  final Offset center = Offset(((ponit1.dx + ponit2.dx) ~/ 2).toDouble(),
+      ((ponit1.dy + ponit2.dy) ~/ 2).toDouble()); // 圆心
+  int rx = (ponit1.dx - ponit2.dx).abs() ~/ (2 * pixelsize); // 横半轴
+  int ry = (ponit1.dy - ponit2.dy).abs() ~/ (2 * pixelsize); // 竖半轴
 
-  double x = 0, y = ry; //dsdasdasd
+  double x = 0, y = ry.toDouble();
   double d1 = (ry * ry) - (rx * rx * ry) + (0.25 * rx * rx);
   double dx = 2 * ry * ry * x; //为零
   double dy = 2 * rx * rx * y;
+  y = y * pixelsize;
 
   // Region 1
   while (dx < dy) {
     drawSymmetricPoints(canvas, center, x.toInt(), y.toInt(), paint);
     if (d1 < 0) {
       x = x + pixelsize;
-      dx = dx + (2 * ry * ry) * pixelsize;
-      d1 = d1 + dx + (ry * ry) * pixelsize;
+      dx = dx + (2 * ry * ry);
+      d1 = d1 + dx + (ry * ry);
     } else {
       x = x + pixelsize;
       y = y - pixelsize;
-      dx = dx + (2 * ry * ry) * pixelsize;
-      dy = dy - (2 * rx * rx) * pixelsize;
+      dx = dx + (2 * ry * ry);
+      dy = dy - (2 * rx * rx);
       d1 = d1 + dx - dy + (ry * ry);
     }
   }
 
   // Region 2
+  y = y / pixelsize;
+  x = x / pixelsize;
   double d2 = ((ry * ry) * ((x + 0.5) * (x + 0.5))) +
       ((rx * rx) * ((y - 1) * (y - 1))) -
       (rx * rx * ry * ry);
+  y = y * pixelsize;
+  x = x * pixelsize;
   while (y >= 0) {
     drawSymmetricPoints(canvas, center, x.toInt(), y.toInt(), paint);
     if (d2 > 0) {
       y = y - pixelsize;
-      dy = dy - (2 * rx * rx) * pixelsize;
-      d2 = d2 + (rx * rx) * pixelsize - dy;
+      dy = dy - (2 * rx * rx);
+      d2 = d2 + (rx * rx) - dy;
     } else {
       y = y - pixelsize;
       x = x + pixelsize;
-      dx = dx + (2 * ry * ry) * pixelsize;
-      dy = dy - (2 * rx * rx) * pixelsize;
-      d2 = d2 + dx - dy + (rx * rx) * pixelsize;
+      dx = dx + (2 * ry * ry);
+      dy = dy - (2 * rx * rx);
+      d2 = d2 + dx - dy + (rx * rx);
     }
   }
 }
