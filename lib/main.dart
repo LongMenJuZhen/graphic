@@ -21,7 +21,7 @@ class _MyAppState extends State<MyApp> {
               seedColor: const Color.fromARGB(255, 84, 115, 38)),
           useMaterial3: true,
         ),
-        title: 'CS05042 course project',
+        title: '这个标题居然可以和应用名不一样',
         home: const Scaffold(
           body: Stack(
             children: [CirclePainter(), Controler()],
@@ -73,8 +73,10 @@ class CirclePainterCanvas extends CustomPainter {
       ..strokeCap = StrokeCap.square
       ..strokeWidth = pixelsize.toDouble();
     //canvas.drawPoints(ui.PointMode.points, points, paint);
-    if (useLine) {
+    if (currentShape == Shape.Line) {
       bresenhamLine(canvas, paint, points[0], points[1]); // Call bresenhamLine
+    } else if (currentShape == Shape.Circle) {
+      bresenhamCircle(canvas, paint, points[0], points[1]);
     } else {
       bresenhamEllipse(canvas, paint, points[0], points[1]);
     }
@@ -108,10 +110,24 @@ class _ControlerState extends State<Controler> {
                   ElevatedButton(
                     onPressed: () {
                       setState(() {
-                        useLine = !useLine;
+                        switch (currentShape) {
+                          case Shape.Circle:
+                            currentShape = Shape.Line;
+                            break;
+                          case Shape.Line:
+                            currentShape = Shape.Ellipse;
+                            break;
+                          case Shape.Ellipse:
+                            currentShape = Shape.Circle;
+                            break;
+                        }
                       });
                     },
-                    child: Text(useLine ? '线' : '圆'),
+                    child: Text(currentShape == Shape.Circle
+                        ? '圆'
+                        : currentShape == Shape.Line
+                            ? '线'
+                            : '椭圆'),
                   ),
                   Slider(
                     value: pixelsize.toDouble(),

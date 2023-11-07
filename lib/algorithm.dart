@@ -70,10 +70,12 @@ void bresenhamEllipse(
   int rx = (ponit1.dx - ponit2.dx).abs() ~/ (2 * pixelsize); // 横半轴
   int ry = (ponit1.dy - ponit2.dy).abs() ~/ (2 * pixelsize); // 竖半轴
 
-  double x = 0, y = ry.toDouble();
-  double d1 = (ry * ry) - (rx * rx * ry) + (0.25 * rx * rx);
-  double dx = 2 * ry * ry * x; //为零
-  double dy = 2 * rx * rx * y;
+  int x = 0, y = ry;
+  int d1 = 4 * (ry * ry) - 4 * (rx * rx * ry) + (rx * rx);
+  int dx = 2 * ry * ry * x; //为零
+  int dy = 2 * rx * rx * y;
+  int ym = y;
+  int xm = x;
   y = y * pixelsize;
 
   // Region 1
@@ -82,36 +84,34 @@ void bresenhamEllipse(
     if (d1 < 0) {
       x = x + pixelsize;
       dx = dx + (2 * ry * ry);
-      d1 = d1 + dx + (ry * ry);
+      d1 = d1 + 4 * dx + 4 * (ry * ry);
     } else {
       x = x + pixelsize;
       y = y - pixelsize;
       dx = dx + (2 * ry * ry);
       dy = dy - (2 * rx * rx);
-      d1 = d1 + dx - dy + (ry * ry);
+      d1 = d1 + 4 * dx - 4 * dy + 4 * (ry * ry);
     }
   }
 
   // Region 2
-  y = y / pixelsize;
-  x = x / pixelsize;
-  double d2 = ((ry * ry) * ((x + 0.5) * (x + 0.5))) +
-      ((rx * rx) * ((y - 1) * (y - 1))) -
-      (rx * rx * ry * ry);
-  y = y * pixelsize;
-  x = x * pixelsize;
+
+  int d2 = ((ry * ry) * ((2 * xm + 1) * (2 * xm + 1))) +
+      2 * ((rx * rx) * ((ym - 1) * (ym - 1))) -
+      2 * (rx * rx * ry * ry);
+
   while (y >= 0) {
     drawSymmetricPoints(canvas, center, x.toInt(), y.toInt(), paint);
     if (d2 > 0) {
       y = y - pixelsize;
       dy = dy - (2 * rx * rx);
-      d2 = d2 + (rx * rx) - dy;
+      d2 = d2 + 2 * (rx * rx) - 2 * dy;
     } else {
       y = y - pixelsize;
       x = x + pixelsize;
       dx = dx + (2 * ry * ry);
       dy = dy - (2 * rx * rx);
-      d2 = d2 + dx - dy + (rx * rx);
+      d2 = d2 + 2 * dx - 2 * dy + 2 * (rx * rx);
     }
   }
 }
